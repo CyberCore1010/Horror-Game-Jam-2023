@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    private PlayerControls playerControls;
+    [HideInInspector] public PlayerControls playerControls;
 
     private static InputManager _instance;
 

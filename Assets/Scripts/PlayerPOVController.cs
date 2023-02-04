@@ -37,20 +37,20 @@ public class PlayerPOVController : MonoBehaviour
         flashlightRotation.x = Mathf.Clamp(flashlightRotation.x, -clampAngle, clampAngle);
         flashlightAim.rotation = Quaternion.Euler(-flashlightRotation.x, flashlightRotation.y, 0f);
 
-        if(Physics.Raycast(flashlightAim.position, flashlightAim.forward, out RaycastHit hit, Mathf.Infinity))
-        {
-            Debug.DrawRay(flashlightAim.position, flashlightAim.TransformDirection(Vector3.forward) * hit.distance, Color.green);
-            flashlight.PointAt(hit.point);
-        }
-        else
-        {
-            Debug.DrawRay(flashlightAim.position, flashlightAim.TransformDirection(Vector3.forward) * 100, Color.red);
-            flashlight.PointAt(flashlightAim.transform.forward * 100);
-        }
+        flashlight.PointAt(flashlightAim.transform.forward * 100);
 
         BodyRotation.Set(BodyRotation.x, Mathf.Lerp(BodyRotation.y, flashlightRotation.y, horizontalSpeed * catchupModifier), BodyRotation.z);
         transform.rotation = Quaternion.Euler(BodyRotation.x, BodyRotation.y, BodyRotation.z);
         HeadRotation.Set(Mathf.Lerp(HeadRotation.x, -flashlightRotation.x, verticalSpeed * catchupModifier), HeadRotation.y, HeadRotation.z);
         head.localRotation = Quaternion.Euler(HeadRotation.x, HeadRotation.y, HeadRotation.z);
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Rigidbody rb = hit.collider.attachedRigidbody;
+        if(rb != null && !rb.isKinematic)
+        {
+            rb.velocity = hit.moveDirection;
+        }
     }
 }
