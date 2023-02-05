@@ -7,8 +7,10 @@ public class ItemDetails : MonoBehaviour
 {
     public enum ItemID
     {
-        Item1,
-        Item2
+        Stackable_Bandage,
+        Stackable_Ammo,
+        Key,
+        Weapon
     }
 
     [Serializable]
