@@ -8,7 +8,10 @@ public class Interaction : MonoBehaviour
     [SerializeField] private float forceAmount = 500;
     [SerializeField] private Transform head;
 
+    private GameObject hand, handHover, handGrab;
+
     private Interactable selectedInteractable;
+    private bool holding;
 
     private Rigidbody selectedRigidbody;
     private Vector3 originalTargetPosition;
@@ -21,11 +24,20 @@ public class Interaction : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        hand = GameObject.Find("Hand");
+        handHover = GameObject.Find("HandHover");
+        handGrab = GameObject.Find("HandGrab");
+        handGrab.SetActive(false);
+
         inputManager = InputManager.Instance;
         inputManager.playerControls.Default.Interact.performed += context =>
         {
+            handHover.SetActive(false);
+            handGrab.SetActive(true);
+
             if (selectedInteractable != null)
             {
+                holding = true;
                 if(selectedInteractable as Dragable)
                 {
                     Debug.Log("Is dragable");
@@ -42,6 +54,10 @@ public class Interaction : MonoBehaviour
 
         inputManager.playerControls.Default.Interact.canceled += context =>
         {
+            handHover.SetActive(true);
+            handGrab.SetActive(false);
+            holding = false;
+
             selectedRigidbody = null;
             if(selectedDoor != null)
             {
@@ -51,15 +67,17 @@ public class Interaction : MonoBehaviour
         };
     }
 
-
-
     private void Update()
     {
+        if(!holding)
+        {
+            hand.SetActive(false);
+        }
         if (Physics.Raycast(head.position, head.forward, out RaycastHit hit, interactionDistance))
         {
-            selectedInteractable = hit.transform.gameObject.GetComponent<Interactable>();
-            if (selectedInteractable != null)
+            if (hit.transform.gameObject.TryGetComponent(out selectedInteractable))
             {
+                hand.SetActive(true);
                 Debug.DrawRay(head.position, head.TransformDirection(Vector3.forward) * hit.distance, Color.green);
             }
             else
