@@ -1,10 +1,13 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
     [HideInInspector] public PlayerControls playerControls;
+    [HideInInspector] public PlayerInput inputSystem;
 
     private static InputManager _instance;
+    private Vector2 cursorPosition = Vector2.zero;
 
     public static InputManager Instance
     {
@@ -15,6 +18,9 @@ public class InputManager : MonoBehaviour
     {
         _instance = this;
         playerControls = new PlayerControls();
+        playerControls.Default.Enable();
+        playerControls.UI.Disable();
+        inputSystem = GetComponent<PlayerInput>();
     }
 
     public void OnEnable()
@@ -35,5 +41,22 @@ public class InputManager : MonoBehaviour
     public Vector2 GetMouseDelta()
     {
         return playerControls.Default.Look.ReadValue<Vector2>();
+    }
+
+    private void Update()
+    {
+        if (inputSystem.currentControlScheme.Equals("Keyboard+Mouse"))
+        {
+            cursorPosition = Mouse.current.position.ReadValue();
+        }
+    }
+
+    public Vector2 GetCursorPosition()
+    {
+        if (inputSystem.currentControlScheme.Equals("Keyboard+Mouse"))
+        {
+            cursorPosition = Mouse.current.position.ReadValue();
+        }
+        return cursorPosition;
     }
 }

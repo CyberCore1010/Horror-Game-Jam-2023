@@ -18,6 +18,8 @@ public class PlayerPOVController : MonoBehaviour
 
     private InputManager inputManager;
 
+    private float previousFlashlightDistance;
+
     private void Awake()
     {
         inputManager = InputManager.Instance;
@@ -29,15 +31,21 @@ public class PlayerPOVController : MonoBehaviour
         if (BodyRotation == null) HeadRotation = transform.rotation.eulerAngles;
         if (HeadRotation == null) HeadRotation = head.localRotation.eulerAngles;
 
-        Cursor.lockState = CursorLockMode.Locked;
-
         Vector2 deltaInput = inputManager.GetMouseDelta();
         flashlightRotation.y += deltaInput.x * verticalSpeed * Time.deltaTime;
         flashlightRotation.x += deltaInput.y * horizontalSpeed * Time.deltaTime;
         flashlightRotation.x = Mathf.Clamp(flashlightRotation.x, -clampAngle, clampAngle);
         flashlightAim.rotation = Quaternion.Euler(-flashlightRotation.x, flashlightRotation.y, 0f);
 
-        flashlight.PointAt(flashlightAim.transform.forward * 100);
+        if (Physics.Raycast(flashlightAim.position, flashlightAim.forward, out RaycastHit hit, Mathf.Infinity))
+        {
+            previousFlashlightDistance = hit.distance;
+            flashlight.PointAt(hit.point, horizontalSpeed);
+        }
+        else
+        {
+            flashlight.PointAt(flashlightAim.position + (flashlightAim.transform.forward * previousFlashlightDistance), horizontalSpeed);
+        }
 
         BodyRotation.Set(BodyRotation.x, Mathf.Lerp(BodyRotation.y, flashlightRotation.y, horizontalSpeed * catchupModifier), BodyRotation.z);
         transform.rotation = Quaternion.Euler(BodyRotation.x, BodyRotation.y, BodyRotation.z);

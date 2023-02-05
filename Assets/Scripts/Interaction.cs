@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Interaction : MonoBehaviour
 {
-    [SerializeField] private float interactionDistance = 10;
+    [SerializeField] private float interactionDistance = 2;
     [SerializeField] private float forceAmount = 500;
     [SerializeField] private Transform head;
 
