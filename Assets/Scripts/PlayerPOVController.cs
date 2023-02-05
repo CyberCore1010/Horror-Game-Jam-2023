@@ -5,7 +5,7 @@ public class PlayerPOVController : MonoBehaviour
 {
     [SerializeField] private float horizontalSpeed = 50f;
     [SerializeField] private float verticalSpeed = 50f;
-    [SerializeField] private float catchupModifier = 0.005f;
+    [SerializeField] private float catchupModifier = 0.0015f;
     [SerializeField] private float clampAngle = 80f;
 
     [SerializeField] private Transform flashlightAim;
@@ -23,7 +23,7 @@ public class PlayerPOVController : MonoBehaviour
         inputManager = InputManager.Instance;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (flashlightRotation == null) flashlightRotation = flashlightAim.rotation.eulerAngles;
         if (BodyRotation == null) HeadRotation = transform.rotation.eulerAngles;

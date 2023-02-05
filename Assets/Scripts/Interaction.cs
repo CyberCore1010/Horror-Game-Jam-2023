@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Interaction : MonoBehaviour
 {
+    [SerializeField] private float interactionDistance = 10;
     [SerializeField] private float forceAmount = 500;
     [SerializeField] private Transform head;
 
@@ -15,25 +16,38 @@ public class Interaction : MonoBehaviour
     private float selectionDistance;
     private InputManager inputManager;
 
+    private Door selectedDoor;
+
     // Start is called before the first frame update
     void Start()
     {
         inputManager = InputManager.Instance;
-        inputManager.playerControls.Default.Interact.started += context =>
+        inputManager.playerControls.Default.Interact.performed += context =>
         {
             if (selectedInteractable != null)
             {
                 if(selectedInteractable as Dragable)
                 {
+                    Debug.Log("Is dragable");
                     selectedRigidbody = GetRigidbodySelected();
+                }
+                else if(selectedInteractable as Door)
+                {
+                    Debug.Log("Is door");
+                    selectedDoor = selectedInteractable as Door;
+                    selectedDoor.DoorHold();
                 }
             }
         };
 
-        inputManager.playerControls.Default.Interact.performed += context =>
+        inputManager.playerControls.Default.Interact.canceled += context =>
         {
-            Debug.Log("Dropped");
             selectedRigidbody = null;
+            if(selectedDoor != null)
+            {
+                selectedDoor.DoorRelease();
+            }
+            selectedDoor = null;
         };
     }
 
@@ -41,7 +55,7 @@ public class Interaction : MonoBehaviour
 
     private void Update()
     {
-        if (Physics.Raycast(head.position, head.forward, out RaycastHit hit, Mathf.Infinity))
+        if (Physics.Raycast(head.position, head.forward, out RaycastHit hit, interactionDistance))
         {
             selectedInteractable = hit.transform.gameObject.GetComponent<Interactable>();
             if (selectedInteractable != null)
@@ -63,7 +77,6 @@ public class Interaction : MonoBehaviour
     {
         if(selectedRigidbody)
         {
-            Debug.Log("Dragging");
             Vector3 positionOffset = (head.position + head.forward * selectionDistance) - originalTargetPosition;
             selectedRigidbody.velocity = (originalRigidbodyPos + positionOffset - selectedRigidbody.transform.position) * forceAmount * Time.deltaTime;
         }
@@ -75,7 +88,6 @@ public class Interaction : MonoBehaviour
         {
             if (hit.collider.gameObject.GetComponent<Rigidbody>())
             {
-                Debug.Log("FoundRigid");
                 selectionDistance = Vector3.Distance(head.position, hit.point);
                 originalTargetPosition = hit.point;
                 originalRigidbodyPos = hit.collider.transform.position;
