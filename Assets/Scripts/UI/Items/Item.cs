@@ -13,7 +13,7 @@ public class Item : MonoBehaviour
 
     public void Update()
     {
-        SpecificUpdate();    
+        SpecificUpdate();
     }
 
     public virtual void SpecificUpdate() { }

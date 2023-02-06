@@ -3,8 +3,11 @@ using UnityEngine.EventSystems;
 
 public class InventoryTile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    public Item ItemInSlot;
+    public Item SlotBlockedBy;
+    public GameObject ItemContainer;
+
     [SerializeField] private GameObject HoverGlow;
-    [SerializeField] private GameObject ItemContainer;
 
     private ItemMove itemMove;
     private InputManager inputManager;
@@ -31,6 +34,8 @@ public class InventoryTile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 itemMove.HandleMovement(GetComponentInChildren<Item>(), ItemContainer.transform, false);
             }
         };
+
+        ItemInSlot = ItemContainer.GetComponentInChildren<Item>();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
