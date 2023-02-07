@@ -4,10 +4,10 @@ using UnityEngine.EventSystems;
 public class InventoryTile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public Item ItemInSlot;
-    public Item SlotBlockedBy;
+    public Item ItemBlockedBy;
     public GameObject ItemContainer;
-
-    [SerializeField] private GameObject HoverGlow;
+    public GameObject SingleHoverGlow;
+    public GameObject DoubleHoverGlow;
 
     private ItemMove itemMove;
     private InputManager inputManager;
@@ -35,18 +35,70 @@ public class InventoryTile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             }
         };
 
+        inputManager.playerControls.UI.Inventory.performed += context =>
+        {
+            SingleHoverGlow.SetActive(false);
+            DoubleHoverGlow.SetActive(false);
+        };
+
         ItemInSlot = ItemContainer.GetComponentInChildren<Item>();
     }
+
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         isHovering = true;
-        HoverGlow.SetActive(true);
+        if(ItemBlockedBy == null)
+        {
+            if (ItemInSlot as DoubleItem)
+            {
+                DoubleHoverGlow.SetActive(true);
+            }
+            else
+            {
+                SingleHoverGlow.SetActive(true);
+            }
+        } 
+        else
+        {
+            InventoryTile blockedByTile = ItemBlockedBy.transform.parent.GetComponentInParent<InventoryTile>();
+
+            if (ItemBlockedBy as DoubleItem)
+            {
+                blockedByTile.DoubleHoverGlow.SetActive(true);
+            }
+            else
+            {
+                blockedByTile.SingleHoverGlow.SetActive(true);
+            }
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         isHovering = false;
-        HoverGlow.SetActive(false);
+        if (ItemBlockedBy == null)
+        {
+            SingleHoverGlow.SetActive(false);
+            DoubleHoverGlow.SetActive(false);
+        }
+        else
+        {
+            InventoryTile blockedByTile = ItemBlockedBy.transform.parent.GetComponentInParent<InventoryTile>();
+            blockedByTile.SingleHoverGlow.SetActive(false);
+            blockedByTile.DoubleHoverGlow.SetActive(false);
+        }
+    }
+
+    public void SwitchToDoubleGlow()
+    {
+        SingleHoverGlow.SetActive(false);
+        DoubleHoverGlow.SetActive(true);
+    }
+
+    public void SwitchToSingleGlow()
+    {
+        SingleHoverGlow.SetActive(true);
+        DoubleHoverGlow.SetActive(false);
     }
 }

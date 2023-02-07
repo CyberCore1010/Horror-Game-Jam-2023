@@ -6,7 +6,7 @@ public class DoubleItem : Item
 
     private void Start()
     {
-        itemImage.sprite = ItemDetails.Instance.GetByID(ID).icon;
-        InventoryHandler.Instance.GetAdjacentTile(transform.parent.GetComponentInParent<InventoryTile>(), orientation).SlotBlockedBy = this;
+        ItemImage.sprite = ItemDetails.Instance.GetByID(ID).icon;
+        InventoryHandler.Instance.GetAdjacentTile(transform.parent.GetComponentInParent<InventoryTile>(), orientation).ItemBlockedBy = this;
     }
 }

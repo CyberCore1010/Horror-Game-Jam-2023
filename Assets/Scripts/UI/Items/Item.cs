@@ -4,11 +4,11 @@ using UnityEngine.UI;
 public class Item : MonoBehaviour
 {
     public ItemDetails.ItemID ID;
-    public Image itemImage;
+    public Image ItemImage;
 
     private void Start()
     {
-        itemImage.sprite = ItemDetails.Instance.GetByID(ID).icon;
+        ItemImage.sprite = ItemDetails.Instance.GetByID(ID).icon;
     }
 
     public void Update()

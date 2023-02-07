@@ -10,7 +10,8 @@ public class ItemDetails : MonoBehaviour
         Stackable_Bandage,
         Stackable_Ammo,
         Key,
-        Weapon
+        Handgun,
+        Double_LeadPipe
     }
 
     [Serializable]

@@ -14,16 +14,16 @@ public class ItemMove : MonoBehaviour
         
         if (item != null && heldItem == null && moveSpecificallyUsed)
         {
-            if(tile.SlotBlockedBy != null)
+            if(tile.ItemBlockedBy != null)
             {
                 heldItem.transform.SetParent(itemContainer);
                 heldItem.transform.localPosition = Vector3.zero;
 
-                tile.SlotBlockedBy.transform.SetParent(transform);
-                tile.SlotBlockedBy.transform.localPosition = Vector3.zero;
+                tile.ItemBlockedBy.transform.SetParent(transform);
+                tile.ItemBlockedBy.transform.localPosition = Vector3.zero;
 
-                heldItem = tile.SlotBlockedBy;
-                tile.SlotBlockedBy = null;
+                heldItem = tile.ItemBlockedBy;
+                tile.ItemBlockedBy = null;
             }
             else
             {
@@ -36,7 +36,7 @@ public class ItemMove : MonoBehaviour
             DoubleItem doubleItem = item as DoubleItem;
             if(doubleItem != null)
             {
-                InventoryHandler.Instance.GetAdjacentTile(tile, doubleItem.orientation).SlotBlockedBy = null;
+                InventoryHandler.Instance.GetAdjacentTile(tile, doubleItem.orientation).ItemBlockedBy = null;
             }
             
             previousItemContainer = itemContainer;
@@ -44,10 +44,35 @@ public class ItemMove : MonoBehaviour
         }
         else if (item == null && heldItem != null)
         {
-            heldItem.transform.SetParent(itemContainer);
-            heldItem.transform.localPosition = Vector3.zero;
-            tile.ItemInSlot = heldItem;
-            heldItem = null;
+            DoubleItem heldDoubleItem = heldItem as DoubleItem;
+            if (heldDoubleItem != null)
+            {
+                InventoryTile adjacentTile = InventoryHandler.Instance.GetAdjacentTile(tile, heldDoubleItem.orientation);
+                if (adjacentTile == null)
+                    return;
+
+                Item secondItem = adjacentTile.ItemInSlot;
+
+                adjacentTile.ItemInSlot = null;
+                adjacentTile.ItemBlockedBy = heldDoubleItem;
+
+                if (secondItem != null)
+                {
+                    previousInventoryTile.ItemInSlot = secondItem;
+                    secondItem.transform.SetParent(previousItemContainer);
+                    secondItem.transform.localPosition = Vector3.zero;
+                }
+
+                tile.SwitchToDoubleGlow();
+            }
+
+            if (tile.ItemBlockedBy == null)
+            {
+                heldItem.transform.SetParent(itemContainer);
+                heldItem.transform.localPosition = Vector3.zero;
+                tile.ItemInSlot = heldItem;
+                heldItem = null;
+            }
         }
         else if (item != null && heldItem != null)
         {
@@ -76,12 +101,12 @@ public class ItemMove : MonoBehaviour
             {
                 if (doubleItem != null && heldDoubleItem.orientation == doubleItem.orientation)
                 {
-                    InventoryHandler.Instance.GetAdjacentTile(tile, doubleItem.orientation).SlotBlockedBy = heldItem;
+                    InventoryHandler.Instance.GetAdjacentTile(tile, doubleItem.orientation).ItemBlockedBy = heldItem;
                     heldItem.transform.SetParent(itemContainer);
                     heldItem.transform.localPosition = Vector3.zero;
                     tile.ItemInSlot = heldItem;
 
-                    InventoryHandler.Instance.GetAdjacentTile(previousInventoryTile, doubleItem.orientation).SlotBlockedBy = item;
+                    InventoryHandler.Instance.GetAdjacentTile(previousInventoryTile, doubleItem.orientation).ItemBlockedBy = item;
                     item.transform.SetParent(previousItemContainer);
                     item.transform.localPosition = Vector3.zero;
                     previousInventoryTile.ItemInSlot = heldItem;
@@ -90,34 +115,62 @@ public class ItemMove : MonoBehaviour
                 }
                 else
                 {
-                    InventoryTile adjacentTile = InventoryHandler.Instance.GetAdjacentTile(tile, doubleItem.orientation);
+                    InventoryTile adjacentTile = InventoryHandler.Instance.GetAdjacentTile(tile, heldDoubleItem.orientation);
+                    
+                    if (adjacentTile == null)
+                        return;
+
                     Item secondItem = adjacentTile.ItemInSlot;
 
                     adjacentTile.ItemInSlot = null;
-                    adjacentTile.SlotBlockedBy = heldDoubleItem;
+                    adjacentTile.ItemBlockedBy = heldDoubleItem;
                     tile.ItemInSlot = heldDoubleItem;
                     heldItem.transform.SetParent(itemContainer);
                     heldItem.transform.localPosition = Vector3.zero;
                     
-                    previousInventoryTile.ItemInSlot = item;
-                    item.transform.SetParent(previousItemContainer);
-                    item.transform.localPosition = Vector3.zero;
+                    if(adjacentTile != previousInventoryTile)
+                    {
+                        previousInventoryTile.ItemInSlot = item;
+                        item.transform.SetParent(previousItemContainer);
+                        item.transform.localPosition = Vector3.zero;
+                    }
+                    else
+                    {
+                        InventoryTile ohShitTile = InventoryHandler.Instance.GetAdjacentTile(adjacentTile, heldDoubleItem.orientation);
 
-                    InventoryTile previousAdjacentTile = InventoryHandler.Instance.GetAdjacentTile(previousInventoryTile, heldDoubleItem.orientation);
-                    previousAdjacentTile.SlotBlockedBy = null;
+                        ohShitTile.ItemInSlot = item;
+                        item.transform.SetParent(ohShitTile.ItemContainer.transform);
+                        item.transform.localPosition = Vector3.zero;
+                    }
 
                     if (secondItem != null)
                     {
+                        InventoryTile previousAdjacentTile = InventoryHandler.Instance.GetAdjacentTile(previousInventoryTile, heldDoubleItem.orientation);
+                        previousAdjacentTile.ItemBlockedBy = null;
+
                         previousAdjacentTile.ItemInSlot = secondItem;
                         secondItem.transform.SetParent(previousAdjacentTile.ItemContainer.transform);
                         secondItem.transform.localPosition = Vector3.zero;
                     }
 
                     heldItem = null;
+                    tile.SwitchToDoubleGlow();
                 }
             }
             else
             {
+                if (doubleItem != null)
+                {
+                    InventoryTile adjacentTile = InventoryHandler.Instance.GetAdjacentTile(tile, doubleItem.orientation);
+                    InventoryTile previousAdjacentTile = InventoryHandler.Instance.GetAdjacentTile(previousInventoryTile, doubleItem.orientation);
+                    adjacentTile.ItemBlockedBy = null;
+                    adjacentTile.ItemInSlot = previousAdjacentTile.ItemInSlot;
+                    adjacentTile.ItemInSlot.transform.SetParent(adjacentTile.ItemContainer.transform);
+                    adjacentTile.ItemInSlot.transform.localPosition = Vector3.zero;
+                    previousAdjacentTile.ItemInSlot = null;
+                    previousAdjacentTile.ItemBlockedBy = doubleItem;
+                }
+
                 heldItem.transform.SetParent(itemContainer);
                 heldItem.transform.localPosition = Vector3.zero;
                 tile.ItemInSlot = heldItem;
@@ -127,6 +180,7 @@ public class ItemMove : MonoBehaviour
                 previousInventoryTile.ItemInSlot = item;
 
                 heldItem = null;
+                tile.SwitchToSingleGlow();
             }
         }
     }
