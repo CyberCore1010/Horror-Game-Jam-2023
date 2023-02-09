@@ -5,6 +5,7 @@ using UnityEngine;
 public class InventoryOpen : MonoBehaviour
 {
     [SerializeField] private GameObject InventoryUI;
+    [SerializeField] private ItemMove ItemMove;
 
     private InputManager inputManager;
     private bool bodgeInventoryFix = false;
@@ -27,7 +28,7 @@ public class InventoryOpen : MonoBehaviour
 
         inputManager.playerControls.UI.Inventory.performed += context =>
         {
-            if (!bodgeInventoryFix)
+            if (!bodgeInventoryFix || ItemMove.heldItem != null)
             {
                 bodgeInventoryFix = true;
                 return; //TODO: Remove this shit code

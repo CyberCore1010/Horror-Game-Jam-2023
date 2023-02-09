@@ -43,14 +43,6 @@ public class InputManager : MonoBehaviour
         return playerControls.Default.Look.ReadValue<Vector2>();
     }
 
-    private void Update()
-    {
-        if (inputSystem.currentControlScheme.Equals("Keyboard+Mouse"))
-        {
-            cursorPosition = Mouse.current.position.ReadValue();
-        }
-    }
-
     public Vector2 GetCursorPosition()
     {
         if (inputSystem.currentControlScheme.Equals("Keyboard+Mouse"))

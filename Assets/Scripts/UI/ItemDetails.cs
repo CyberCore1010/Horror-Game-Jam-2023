@@ -14,12 +14,22 @@ public class ItemDetails : MonoBehaviour
         Double_LeadPipe
     }
 
+    public enum ItemCategory
+    {
+        Healing,
+        Ammo,
+        Misc,
+        Pistol,
+        Melee
+    }
+
     [Serializable]
     public struct ItemDetail
     {
         public ItemID ID;
+        public ItemCategory category;
         public Sprite icon;
-        public string title;
+        public string name;
         public string description;
     }
 

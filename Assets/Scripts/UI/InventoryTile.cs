@@ -21,9 +21,18 @@ public class InventoryTile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
         inputManager.playerControls.UI.Move.performed += context =>
         {
-            if(isHovering)
+            if (isHovering)
             {
-                itemMove.HandleMovement(GetComponentInChildren<Item>(), ItemContainer.transform, true);
+                if(ItemBlockedBy == null)
+                {
+                    itemMove.HandleMovement(ItemInSlot, ItemContainer.transform, true);
+                }
+                else
+                {
+                    ItemBlockedBy.transform.parent.GetComponentInParent<InventoryTile>().StopHovering();
+                    StartHovering();
+                    itemMove.HandleMovement(ItemBlockedBy, ItemBlockedBy.transform.parent.transform, true);
+                }
             }
         };
 
@@ -31,7 +40,16 @@ public class InventoryTile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             if (isHovering)
             {
-                itemMove.HandleMovement(GetComponentInChildren<Item>(), ItemContainer.transform, false);
+                if (ItemBlockedBy == null)
+                {
+                    itemMove.HandleMovement(ItemInSlot, ItemContainer.transform, false);
+                }
+                else
+                {
+                    ItemBlockedBy.transform.parent.GetComponentInParent<InventoryTile>().StopHovering();
+                    StartHovering();
+                    itemMove.HandleMovement(ItemBlockedBy, ItemBlockedBy.transform.parent.transform, false);
+                }
             }
         };
 
@@ -42,13 +60,27 @@ public class InventoryTile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         };
 
         ItemInSlot = ItemContainer.GetComponentInChildren<Item>();
+        DoubleItem doubleInSlot = ItemInSlot as DoubleItem;
+        if (doubleInSlot != null)
+        {
+            InventoryHandler.Instance.GetAdjacentTile(this, doubleInSlot.orientation).ItemBlockedBy = ItemInSlot;
+        }
     }
 
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        StartHovering();
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        StopHovering();
+    }
+
+    public void StartHovering() {
         isHovering = true;
-        if(ItemBlockedBy == null)
+        if (ItemBlockedBy == null)
         {
             if (ItemInSlot as DoubleItem)
             {
@@ -58,7 +90,7 @@ public class InventoryTile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             {
                 SingleHoverGlow.SetActive(true);
             }
-        } 
+        }
         else
         {
             InventoryTile blockedByTile = ItemBlockedBy.transform.parent.GetComponentInParent<InventoryTile>();
@@ -72,9 +104,20 @@ public class InventoryTile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 blockedByTile.SingleHoverGlow.SetActive(true);
             }
         }
+
+        if(ItemInSlot != null)
+        {
+            ItemDetails.ItemDetail itemDetail = ItemDetails.Instance.GetByID(ItemInSlot.ID);
+            ItemDescription.Instance.SetItem(itemDetail.name, itemDetail.category.ToString(), itemDetail.description);
+        }
+        else if(ItemBlockedBy != null)
+        {
+            ItemDetails.ItemDetail itemDetail = ItemDetails.Instance.GetByID(ItemBlockedBy.ID);
+            ItemDescription.Instance.SetItem(itemDetail.name, itemDetail.category.ToString(), itemDetail.description);
+        }
     }
 
-    public void OnPointerExit(PointerEventData eventData)
+    public void StopHovering()
     {
         isHovering = false;
         if (ItemBlockedBy == null)
@@ -88,6 +131,7 @@ public class InventoryTile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             blockedByTile.SingleHoverGlow.SetActive(false);
             blockedByTile.DoubleHoverGlow.SetActive(false);
         }
+        ItemDescription.Instance.Hide();
     }
 
     public void SwitchToDoubleGlow()

@@ -185,6 +185,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""Inventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4e495eb9-50e3-4530-a800-0b7896cbadd6"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -218,6 +229,42 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ButtonSnapUp"",
+                    ""type"": ""Button"",
+                    ""id"": ""1b59f942-3345-40ea-b9a9-9ad2d6fae4a9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ButtonSnapDown"",
+                    ""type"": ""Button"",
+                    ""id"": ""59739714-9b02-40c9-b1ea-41bce84e02ba"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ButtonSnapLeft"",
+                    ""type"": ""Button"",
+                    ""id"": ""6c714bae-f7fc-4229-aef0-c2a06293ca84"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ButtonSnapRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""fd3f6112-54d7-457b-97c6-1e8dbf099852"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -235,7 +282,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""4f8ab9ce-4bd6-486e-aacf-f11150f6326b"",
-                    ""path"": ""<Gamepad>/select"",
+                    ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -286,6 +333,138 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3c222b9f-db37-4fc0-b369-319c625e75c4"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ButtonSnapUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2f80a63a-bb1f-4488-8b34-56bba8fd500f"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard+Mouse"",
+                    ""action"": ""ButtonSnapUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e7ab3f91-ec18-4022-ac94-eec43189c08c"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard+Mouse"",
+                    ""action"": ""ButtonSnapUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b854ecb4-b523-4913-b49e-ba9a7fd75b80"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ButtonSnapDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""daadbf0b-7b1d-46a2-8bcf-267811953cfd"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard+Mouse"",
+                    ""action"": ""ButtonSnapDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1f1b2780-bc1e-4488-8f25-1c27d6f04038"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard+Mouse"",
+                    ""action"": ""ButtonSnapDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6ea123b5-b3d7-4158-94ad-a60022a8f9a1"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ButtonSnapLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""442a52b7-0501-4ed8-81e1-531cb01e30fc"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard+Mouse"",
+                    ""action"": ""ButtonSnapLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""224d41fa-a676-49dd-aea5-1f00b8823d41"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard+Mouse"",
+                    ""action"": ""ButtonSnapLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1a2d60d8-9c7b-42bb-97b8-bedb01ce50a1"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ButtonSnapRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""10e34806-d906-4bf4-9090-a2308c9a45ef"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard+Mouse"",
+                    ""action"": ""ButtonSnapRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f5832ae4-2fc8-4713-a983-7f85d9bcc6b2"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard+Mouse"",
+                    ""action"": ""ButtonSnapRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -331,6 +510,10 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_UI_Inventory = m_UI.FindAction("Inventory", throwIfNotFound: true);
         m_UI_Interact = m_UI.FindAction("Interact", throwIfNotFound: true);
         m_UI_Move = m_UI.FindAction("Move", throwIfNotFound: true);
+        m_UI_ButtonSnapUp = m_UI.FindAction("ButtonSnapUp", throwIfNotFound: true);
+        m_UI_ButtonSnapDown = m_UI.FindAction("ButtonSnapDown", throwIfNotFound: true);
+        m_UI_ButtonSnapLeft = m_UI.FindAction("ButtonSnapLeft", throwIfNotFound: true);
+        m_UI_ButtonSnapRight = m_UI.FindAction("ButtonSnapRight", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -450,6 +633,10 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_Inventory;
     private readonly InputAction m_UI_Interact;
     private readonly InputAction m_UI_Move;
+    private readonly InputAction m_UI_ButtonSnapUp;
+    private readonly InputAction m_UI_ButtonSnapDown;
+    private readonly InputAction m_UI_ButtonSnapLeft;
+    private readonly InputAction m_UI_ButtonSnapRight;
     public struct UIActions
     {
         private @PlayerControls m_Wrapper;
@@ -457,6 +644,10 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @Inventory => m_Wrapper.m_UI_Inventory;
         public InputAction @Interact => m_Wrapper.m_UI_Interact;
         public InputAction @Move => m_Wrapper.m_UI_Move;
+        public InputAction @ButtonSnapUp => m_Wrapper.m_UI_ButtonSnapUp;
+        public InputAction @ButtonSnapDown => m_Wrapper.m_UI_ButtonSnapDown;
+        public InputAction @ButtonSnapLeft => m_Wrapper.m_UI_ButtonSnapLeft;
+        public InputAction @ButtonSnapRight => m_Wrapper.m_UI_ButtonSnapRight;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -475,6 +666,18 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Move.started -= m_Wrapper.m_UIActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnMove;
+                @ButtonSnapUp.started -= m_Wrapper.m_UIActionsCallbackInterface.OnButtonSnapUp;
+                @ButtonSnapUp.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnButtonSnapUp;
+                @ButtonSnapUp.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnButtonSnapUp;
+                @ButtonSnapDown.started -= m_Wrapper.m_UIActionsCallbackInterface.OnButtonSnapDown;
+                @ButtonSnapDown.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnButtonSnapDown;
+                @ButtonSnapDown.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnButtonSnapDown;
+                @ButtonSnapLeft.started -= m_Wrapper.m_UIActionsCallbackInterface.OnButtonSnapLeft;
+                @ButtonSnapLeft.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnButtonSnapLeft;
+                @ButtonSnapLeft.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnButtonSnapLeft;
+                @ButtonSnapRight.started -= m_Wrapper.m_UIActionsCallbackInterface.OnButtonSnapRight;
+                @ButtonSnapRight.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnButtonSnapRight;
+                @ButtonSnapRight.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnButtonSnapRight;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -488,6 +691,18 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @ButtonSnapUp.started += instance.OnButtonSnapUp;
+                @ButtonSnapUp.performed += instance.OnButtonSnapUp;
+                @ButtonSnapUp.canceled += instance.OnButtonSnapUp;
+                @ButtonSnapDown.started += instance.OnButtonSnapDown;
+                @ButtonSnapDown.performed += instance.OnButtonSnapDown;
+                @ButtonSnapDown.canceled += instance.OnButtonSnapDown;
+                @ButtonSnapLeft.started += instance.OnButtonSnapLeft;
+                @ButtonSnapLeft.performed += instance.OnButtonSnapLeft;
+                @ButtonSnapLeft.canceled += instance.OnButtonSnapLeft;
+                @ButtonSnapRight.started += instance.OnButtonSnapRight;
+                @ButtonSnapRight.performed += instance.OnButtonSnapRight;
+                @ButtonSnapRight.canceled += instance.OnButtonSnapRight;
             }
         }
     }
@@ -522,5 +737,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnInventory(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
+        void OnButtonSnapUp(InputAction.CallbackContext context);
+        void OnButtonSnapDown(InputAction.CallbackContext context);
+        void OnButtonSnapLeft(InputAction.CallbackContext context);
+        void OnButtonSnapRight(InputAction.CallbackContext context);
     }
 }
