@@ -5,6 +5,7 @@ public class Item : MonoBehaviour
 {
     public ItemDetails.ItemID ID;
     public Image ItemImage;
+    public Effect effect;
 
     private void Start()
     {

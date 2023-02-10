@@ -21,17 +21,17 @@ public class InventoryTile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
         inputManager.playerControls.UI.Move.performed += context =>
         {
-            if (isHovering)
+            if (isHovering && !InventoryHandler.Instance.OpenForInteraction)
             {
                 if(ItemBlockedBy == null)
                 {
-                    itemMove.HandleMovement(ItemInSlot, ItemContainer.transform, true);
+                    itemMove.HandleMovement(ItemInSlot, ItemContainer.transform);
                 }
                 else
                 {
                     ItemBlockedBy.transform.parent.GetComponentInParent<InventoryTile>().StopHovering();
                     StartHovering();
-                    itemMove.HandleMovement(ItemBlockedBy, ItemBlockedBy.transform.parent.transform, true);
+                    itemMove.HandleMovement(ItemBlockedBy, ItemBlockedBy.transform.parent.transform);
                 }
             }
         };
@@ -40,15 +40,39 @@ public class InventoryTile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             if (isHovering)
             {
-                if (ItemBlockedBy == null)
+                bool isConsumed = false;
+
+                if (InventoryHandler.Instance.OpenForInteraction)
                 {
-                    itemMove.HandleMovement(ItemInSlot, ItemContainer.transform, false);
+                    if(ItemInSlot != null && ItemInSlot.effect as InteractiveEffect)
+                    {
+                        isConsumed = ItemInSlot.effect.Trigger();
+                    }
+                    else
+                    {
+                        PlayerVoiceLineHandler.Instance.CantUseThat();
+                    }
                 }
                 else
                 {
-                    ItemBlockedBy.transform.parent.GetComponentInParent<InventoryTile>().StopHovering();
-                    StartHovering();
-                    itemMove.HandleMovement(ItemBlockedBy, ItemBlockedBy.transform.parent.transform, false);
+                    if(ItemInSlot != null && ItemInSlot.effect != null && !(ItemInSlot.effect as InteractiveEffect))
+                    {
+                        isConsumed = ItemInSlot.effect.Trigger();
+                    }
+                }
+
+                if(isConsumed)
+                {
+                    StackableItem stackable = ItemInSlot as StackableItem;
+                    if(stackable != null)
+                    {
+                        stackable.currentStack -= 1;
+                        if(stackable.currentStack < 1)
+                        {
+                            ItemInSlot = null;
+                            Destroy(stackable.gameObject);
+                        }
+                    }
                 }
             }
         };

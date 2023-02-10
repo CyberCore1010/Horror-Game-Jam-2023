@@ -4,7 +4,8 @@ using UnityEngine;
 public class ItemMove : MonoBehaviour
 {
     public Item heldItem;
-    
+
+    private bool holdingItem = false;
     private Transform previousItemContainer;
     private InventoryTile previousInventoryTile;
 
@@ -12,17 +13,35 @@ public class ItemMove : MonoBehaviour
     {
         InputManager.Instance.playerControls.UI.Inventory.performed += context =>
         {
-            heldItem.transform.SetParent(previousItemContainer);
-            heldItem.transform.localPosition = Vector3.zero;
-            heldItem = null;
+            CancelMove();            
         };
     }
 
-    public void HandleMovement(Item item, Transform itemContainer, bool moveSpecificallyUsed)
+    private void Update()
+    {
+        if(!holdingItem && heldItem != null)
+        {
+            ButtonTipHandler.Instance.HoldingTips();
+            holdingItem = true;
+        }
+        else if(holdingItem && heldItem == null)
+        {
+            ButtonTipHandler.Instance.InventoryTips();
+            holdingItem = false;
+        }
+    }
+
+    public void HandleMovement(Item item, Transform itemContainer)
     {
         InventoryTile tile = itemContainer.parent.GetComponent<InventoryTile>();
         
-        if (item != null && heldItem == null && moveSpecificallyUsed)
+        if(tile == previousInventoryTile)
+        {
+            CancelMove();
+            return;
+        }
+
+        if (item != null && heldItem == null)
         {
             if(tile.ItemBlockedBy != null)
             {
@@ -79,6 +98,7 @@ public class ItemMove : MonoBehaviour
             heldItem.transform.localPosition = Vector3.zero;
             tile.ItemInSlot = heldItem;
             heldItem = null;
+            previousInventoryTile = null;
         }
         else if (item != null && heldItem != null)
         {
@@ -102,6 +122,10 @@ public class ItemMove : MonoBehaviour
                 {
                     Destroy(heldItem.transform.gameObject);
                 }
+                else
+                {
+                    CancelMove();
+                }
             }
             else if (heldDoubleItem != null)
             {
@@ -118,6 +142,7 @@ public class ItemMove : MonoBehaviour
                     previousInventoryTile.ItemInSlot = heldItem;
 
                     heldItem = null;
+                    previousInventoryTile = null;
                 }
                 else
                 {
@@ -160,6 +185,7 @@ public class ItemMove : MonoBehaviour
                     }
 
                     heldItem = null;
+                    previousInventoryTile = null;
                     tile.SwitchToDoubleGlow();
                 }
             }
@@ -169,14 +195,22 @@ public class ItemMove : MonoBehaviour
                 {
                     InventoryTile adjacentTile = InventoryHandler.Instance.GetAdjacentTile(tile, doubleItem.orientation);
                     InventoryTile previousAdjacentTile = InventoryHandler.Instance.GetAdjacentTile(previousInventoryTile, doubleItem.orientation);
-                    adjacentTile.ItemBlockedBy = null;
-                    if (previousAdjacentTile.ItemInSlot != null)
+                    if(previousAdjacentTile != null)
                     {
-                        adjacentTile.ItemInSlot = previousAdjacentTile.ItemInSlot;
-                        adjacentTile.ItemInSlot.transform.SetParent(adjacentTile.ItemContainer.transform);
-                        adjacentTile.ItemInSlot.transform.localPosition = Vector3.zero;
-                        previousAdjacentTile.ItemInSlot = null;
-                        previousAdjacentTile.ItemBlockedBy = doubleItem;
+                        adjacentTile.ItemBlockedBy = null;
+                        if (previousAdjacentTile.ItemInSlot != null)
+                        {
+                            adjacentTile.ItemInSlot = previousAdjacentTile.ItemInSlot;
+                            adjacentTile.ItemInSlot.transform.SetParent(adjacentTile.ItemContainer.transform);
+                            adjacentTile.ItemInSlot.transform.localPosition = Vector3.zero;
+                            previousAdjacentTile.ItemInSlot = null;
+                            previousAdjacentTile.ItemBlockedBy = doubleItem;
+                        }
+                    }
+                    else
+                    {
+                        CancelMove();
+                        return;
                     }
                 }
 
@@ -189,8 +223,20 @@ public class ItemMove : MonoBehaviour
                 previousInventoryTile.ItemInSlot = item;
 
                 heldItem = null;
+                previousInventoryTile = null;
                 tile.SwitchToSingleGlow();
             }
+        }
+    }
+
+    private void CancelMove()
+    {
+        if (heldItem != null)
+        {
+            heldItem.transform.SetParent(previousItemContainer);
+            heldItem.transform.localPosition = Vector3.zero;
+            heldItem = null;
+            previousInventoryTile = null;
         }
     }
 }

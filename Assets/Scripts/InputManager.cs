@@ -18,19 +18,8 @@ public class InputManager : MonoBehaviour
     {
         _instance = this;
         playerControls = new PlayerControls();
-        playerControls.Default.Enable();
-        playerControls.UI.Disable();
+        SwitchInputSystem(InputMap.Default);
         inputSystem = GetComponent<PlayerInput>();
-    }
-
-    public void OnEnable()
-    {
-        playerControls.Enable();
-    }
-
-    public void OnDisable()
-    {
-        playerControls.Disable();
     }
 
     public Vector2 GetMovement()
@@ -50,5 +39,30 @@ public class InputManager : MonoBehaviour
             cursorPosition = Mouse.current.position.ReadValue();
         }
         return cursorPosition;
+    }
+
+    public void SwitchInputSystem(InputMap inputMap)
+    {
+        switch(inputMap)
+        {
+            case InputMap.Default:
+                playerControls.Default.Enable();
+                playerControls.UI.Disable();
+                break;
+            case InputMap.Inventory:
+                playerControls.Default.Disable();
+                playerControls.UI.Enable();
+                ButtonTipHandler.Instance.InventoryTips();
+                break;
+            case InputMap.Item:
+                break;
+        }
+    }
+
+    public enum InputMap
+    {
+        Default,
+        Inventory,
+        Item
     }
 }

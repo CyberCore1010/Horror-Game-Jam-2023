@@ -7,37 +7,30 @@ public class InventoryOpen : MonoBehaviour
     [SerializeField] private GameObject InventoryUI;
     [SerializeField] private ItemMove ItemMove;
 
-    private InputManager inputManager;
-    private bool bodgeInventoryFix = false;
-
     void Start()
     {
         InventoryUI.SetActive(false);
-        inputManager = InputManager.Instance;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        inputManager.playerControls.Default.Inventory.performed += context =>
+        InputManager.Instance.playerControls.Default.Inventory.performed += context =>
         {
-            inputManager.playerControls.Default.Disable();
-            inputManager.playerControls.UI.Enable();
+            InputManager.Instance.SwitchInputSystem(InputManager.InputMap.Inventory);
             InventoryUI.SetActive(true);
             Cursor.lockState = CursorLockMode.None;
             Debug.Log("Inventory Opened");
         };
 
-        inputManager.playerControls.UI.Inventory.performed += context =>
+        InputManager.Instance.playerControls.UI.Inventory.performed += context =>
         {
-            if (!bodgeInventoryFix || ItemMove.heldItem != null)
+            if(ItemMove.heldItem == null)
             {
-                bodgeInventoryFix = true;
-                return; //TODO: Remove this shit code
+                InventoryHandler.Instance.OpenForInteraction = false;
+                InputManager.Instance.SwitchInputSystem(InputManager.InputMap.Default);
+                InventoryUI.SetActive(false);
+                Cursor.lockState = CursorLockMode.Locked;
+                Debug.Log("Inventory Closed");
             }
-            inputManager.playerControls.Default.Enable();
-            inputManager.playerControls.UI.Disable();
-            InventoryUI.SetActive(false);
-            Cursor.lockState = CursorLockMode.Locked;
-            Debug.Log("Inventory Closed");
         };
     }
 }

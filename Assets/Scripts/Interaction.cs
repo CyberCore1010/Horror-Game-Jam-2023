@@ -20,6 +20,9 @@ public class Interaction : MonoBehaviour
     private InputManager inputManager;
 
     private Door selectedDoor;
+    private ItemPickup selectedItem;
+
+    private LayerMask interactionMask;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +31,7 @@ public class Interaction : MonoBehaviour
         handHover = GameObject.Find("HandHover");
         handGrab = GameObject.Find("HandGrab");
         handGrab.SetActive(false);
+        interactionMask = LayerMask.GetMask("Interactive");
 
         inputManager = InputManager.Instance;
         inputManager.playerControls.Default.Interact.performed += context =>
@@ -35,6 +39,7 @@ public class Interaction : MonoBehaviour
             handHover.SetActive(false);
             handGrab.SetActive(true);
 
+            //TODO: change this to unified method like "Interact()" on base class
             if (selectedInteractable != null)
             {
                 holding = true;
@@ -48,6 +53,19 @@ public class Interaction : MonoBehaviour
                     Debug.Log("Is door");
                     selectedDoor = selectedInteractable as Door;
                     selectedDoor.DoorHold();
+                }
+                else if(selectedInteractable as ItemPickup)
+                {
+                    Debug.Log("Is Item");
+                    selectedRigidbody = GetRigidbodySelected();
+                    selectedItem = selectedInteractable as ItemPickup;
+                    selectedItem.StartInteraction();
+                }
+                else if(selectedInteractable as ItemInteractable)
+                {
+                    Debug.Log("Is Item Interactable");
+                    (selectedInteractable as ItemInteractable).StartInteraction();
+                    
                 }
             }
         };
@@ -64,16 +82,24 @@ public class Interaction : MonoBehaviour
                 selectedDoor.DoorRelease();
             }
             selectedDoor = null;
+
+            if(selectedItem != null)
+            {
+                selectedItem.StopInteraction();
+            }
+            selectedItem = null;
         };
     }
 
     private void Update()
     {
-        if(!holding)
+        RaycastHit hit;
+
+        if (!holding)
         {
             hand.SetActive(false);
         }
-        if (Physics.Raycast(head.position, head.forward, out RaycastHit hit, interactionDistance))
+        if (Physics.Raycast(head.position, head.forward, out hit, interactionDistance, interactionMask))
         {
             if (hit.transform.gameObject.TryGetComponent(out selectedInteractable))
             {

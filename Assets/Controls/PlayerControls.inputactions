@@ -146,7 +146,7 @@
                     "name": "",
                     "id": "0f23034a-0a04-4605-96cb-9ca96b6f3620",
                     "path": "<Gamepad>/rightTrigger",
-                    "interactions": "",
+                    "interactions": "Hold,Press",
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Interact",

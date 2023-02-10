@@ -20,9 +20,12 @@ public class PlayerPOVController : MonoBehaviour
 
     private float previousFlashlightDistance;
 
+    private LayerMask playerLayer;
+
     private void Awake()
     {
         inputManager = InputManager.Instance;
+        playerLayer = LayerMask.GetMask("Player");
     }
 
     private void FixedUpdate()
@@ -37,7 +40,7 @@ public class PlayerPOVController : MonoBehaviour
         flashlightRotation.x = Mathf.Clamp(flashlightRotation.x, -clampAngle, clampAngle);
         flashlightAim.rotation = Quaternion.Euler(-flashlightRotation.x, flashlightRotation.y, 0f);
 
-        if (Physics.Raycast(flashlightAim.position, flashlightAim.forward, out RaycastHit hit, Mathf.Infinity))
+        if (Physics.Raycast(flashlightAim.position, flashlightAim.forward, out RaycastHit hit, Mathf.Infinity, ~playerLayer))
         {
             previousFlashlightDistance = hit.distance;
             flashlight.PointAt(hit.point, horizontalSpeed);
